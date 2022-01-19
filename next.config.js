@@ -3,7 +3,7 @@ module.exports = {
     async rewrites() {
         return [
             {
-                source: "/blog/:slug*",
+                source: "/blog/:slug*/",
                 destination: "https://test2-ten-beta.vercel.app/blog/:slug*",
             },
         ];
