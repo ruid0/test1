@@ -1,4 +1,5 @@
 module.exports = {
+    trailingSlash: false,
     async rewrites() {
         return [
             {
