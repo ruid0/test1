@@ -1,8 +1,18 @@
 {
     "routes": [
         {
-            "src": "/blog/:path*",
-            "dest": "https://test2-ten-beta.vercel.app/blog/:path*"
-        }    
+            "src": "/blog",
+            "dest": "https://test2-ten-beta.vercel.app/blog"
+        },
+
+        {
+            "src": "/blog/(.*?)([.]\\w{2,5})(\\?[^/]+)?",
+            "dest": "https://test2-ten-beta.vercel.app/$1$2$3"
+        },
+
+        {
+            "src": "/blog/([\\S\\s]+)",
+            "dest": "https://test2-ten-beta.vercel.app/$1"
+        }
     ]
 }
