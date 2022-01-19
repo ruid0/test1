@@ -2,7 +2,7 @@
     "routes": [
         {
             "src": "/blog",
-            "dest": "https://test2-ten-beta.vercel.app/blog"
+            "dest": "https://test2-ten-beta.vercel.app/blog/"
         },
 
         {
