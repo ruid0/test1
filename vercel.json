@@ -1,0 +1,9 @@
+{
+    "redirects": [
+      {
+        "source": "/blog/:path*",
+        "destination": "https://test2-ten-beta.vercel.app/blog/:path*",
+        "permanent": false
+      }
+    ]
+  }
