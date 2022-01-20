@@ -12,7 +12,7 @@
 
         {
             "src": "/blog/([\\S\\s]+)",
-            "dest": "https://test2-ten-beta.vercel.app/$1/"
+            "dest": "https://test2-ten-beta.vercel.app/blog/$1"
         }
     ]
 }
