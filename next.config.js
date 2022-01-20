@@ -4,7 +4,7 @@ module.exports = {
         return [
             {
                 source: "/blog/:slug*/",
-                destination: "https://test2-ten-beta.vercel.app/blog/:slug*(?/)",
+                destination: "https://test2-ten-beta.vercel.app/blog/:slug*(\\/)",
             },
         ];
     },
