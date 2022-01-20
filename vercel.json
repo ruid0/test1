@@ -7,7 +7,7 @@
 
         {
             "src": "/blog/(.*?)([.]\\w{2,5})(\\?[^/]+)?",
-            "dest": "https://test2-ten-beta.vercel.app/$1$2$3"
+            "dest": "https://test2-ten-beta.vercel.app/blog/$1$2$3"
         },
 
         {
