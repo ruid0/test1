@@ -19,7 +19,7 @@ jobs:
             repo_owner=$(jq -r .repository.owner.login "$GITHUB_EVENT_PATH")
             jira_ticket_number='JIRA-123'  # replace this with your actual Jira ticket number
             echo "Posting comment with Jira ticket number $jira_ticket_number on PR #$pr_number in $repo_owner/$repo_name."
-            curl -s -X POST -H "Authorization: token $GITHUB_TOKEN" https://api.github.com/repos/$repo_owner/$repo_name/issues/$pr_number/comments -d "{\"body\":\"This PR is related to Jira ticket $jira_ticket_number\"}"
+            curl -s -X POST -H "Authorization: token $TOKEN" https://api.github.com/repos/$repo_owner/$repo_name/issues/$pr_number/comments -d "{\"body\":\"This PR is related to Jira ticket $jira_ticket_number\"}"
           else
             echo "PR review is not approved, no action taken."
           fi
