@@ -18,7 +18,7 @@ jobs:
             repo_name=$(jq -r .repository.name "$GITHUB_EVENT_PATH")
             repo_owner=$(jq -r .repository.owner.login "$GITHUB_EVENT_PATH")
             echo "Approving PR #$pr_number in $repo_owner/$repo_name."
-            curl -s -X PUT -H "Authorization: token $GITHUB_TOKEN" https://api.github.com/repos/$repo_owner/$repo_name/pulls/$pr_number/reviews -d "{\"event\":\"APPROVE\"}"
+            curl -s -X PUT -H "Authorization: token $TOKEN" https://api.github.com/repos/$repo_owner/$repo_name/pulls/$pr_number/reviews -d "{\"event\":\"APPROVE\"}"
           else
             echo "Comment does not contain keyword 'approve', no action taken."
           fi
