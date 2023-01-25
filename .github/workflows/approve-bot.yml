@@ -10,6 +10,7 @@ jobs:
     steps:
       - name: Get current branch name
         run: |
-          pull_request=$(curl -s -H "Authorization: Bearer $TOKEN" https://api.github.com/repos/$GITHUB_REPOSITORY/pulls/$GITHUB_EVENT_NUMBER)
+          pr_number=$(jq -r .issue.number "$GITHUB_EVENT_PATH")
+          pull_request=$(curl -s -H "Authorization: Bearer $GITHUB_TOKEN" https://api.github.com/repos/$GITHUB_REPOSITORY/pulls/$pr_number)
           current_branch=$(echo $pull_request | jq -r '.head.ref')
           echo "Current branch: $current_branch"
