@@ -8,6 +8,8 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Get current branch name
-      run: | 
-        echo "Current branch: $GITHUB_HEAD_REF"
+      - name: Get current branch name
+        run: |
+          pull_request=$(curl -s -H "Authorization: Bearer $TOKEN" https://api.github.com/repos/$GITHUB_REPOSITORY/pulls/$GITHUB_EVENT_NUMBER)
+          current_branch=$(echo $pull_request | jq -r '.head.ref')
+          echo "Current branch: $current_branch"
