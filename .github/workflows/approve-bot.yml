@@ -11,7 +11,7 @@ jobs:
     - name: Check if comment contains keyword
       run: |
         if [[ "$GITHUB_EVENT_NAME" == "issue_comment" ]]; then
-          echo "${GITHUB_REF#refs/heads/}"
+          echo "${GITHUB_HEAD_REF}"
 
           comment_body=$(jq -r .comment.body "$GITHUB_EVENT_PATH")
           if [[ "$comment_body" == "approve" ]]; then
