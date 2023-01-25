@@ -11,7 +11,8 @@ jobs:
     - name: Check if comment contains keyword
       run: |
         if [[ "$GITHUB_EVENT_NAME" == "issue_comment" ]]; then
-          echo "$GITHUB_HEAD_REF"
+          echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
+
           comment_body=$(jq -r .comment.body "$GITHUB_EVENT_PATH")
           if [[ "$comment_body" == "approve" ]]; then
             echo "Comment contains keyword 'approve', proceeding with PR approval."
