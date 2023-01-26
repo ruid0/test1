@@ -14,7 +14,7 @@ jobs:
 
       - name: Review State
         id: review-state
-        run: echo "state=$(jq -r .review.state "$GITHUB_EVENT_PATH") >> $GITHUB_OUTPUT
+        run: echo "state=$(jq -r .review.state "$GITHUB_EVENT_PATH")" >> $GITHUB_OUTPUT
 
       - name: Get jira_ticket_number
         id: jira-number
