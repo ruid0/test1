@@ -1,6 +1,7 @@
 name: Comment with Jira Ticket Number Once Approved
 on:
-  pull_request
+  pull_request_review:
+    types: [submitted]
 
 
 jobs:
@@ -10,13 +11,18 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
+
+      - name: Review State
+        id: review-state
+        run: echo "state=$(jq -r .review.state "$GITHUB_EVENT_PATH") >> $GITHUB_OUTPUT
+
       - name: Get jira_ticket_number
-        run: |
-          echo ::set-env name=jira_ticket_number::$(echo ${{ github.head_ref }} | sed 's/off-\([0-9]*\).*/\1/')
-
-
+        id: jira-number
+        run: echo "jira_ticket_number=$(echo ${{ github.head_ref }} | sed -E 's/off-([0-9]*).*/off-\1/')" >> $GITHUB_OUTPUT
+        
       - name: Comment PR
+        if: ${{ steps.review-state.outputs.state == 'approved' }}
         uses: thollander/actions-comment-pull-request@v2
         with:
           message: |
-            Current branch is ${{jira_ticket_number}}.
+            ${{ steps.jira-number.outputs.jira_ticket_number }}
