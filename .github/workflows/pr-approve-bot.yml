@@ -3,7 +3,6 @@ on:
   pull_request_review:
     types: [submitted]
 
-
 jobs:
   comment:
     runs-on: ubuntu-latest
@@ -16,6 +15,9 @@ jobs:
         id: review-state
         run: echo "state=$(jq -r .review.state "$GITHUB_EVENT_PATH")" >> $GITHUB_OUTPUT
 
+      - name: Current branch
+        run: echo ${{ github.head_ref }}
+
       - name: Get jira_ticket_number
         id: jira-number
         run: echo "jira_ticket_number=$(echo ${{ github.head_ref }} | sed -E 's/off-([0-9]*).*/off-\1/')" >> $GITHUB_OUTPUT
@@ -25,4 +27,4 @@ jobs:
         uses: thollander/actions-comment-pull-request@v2
         with:
           message: |
-            ${{ steps.jira-number.outputs.jira_ticket_number }}
+            jira ticket ${{ steps.jira-number.outputs.jira_ticket_number }}
