@@ -11,12 +11,11 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
       - name: Get jira_ticket_number
-        run: |
-          echo ::set-env name=jira_ticket_number::$(echo ${{ github.head_ref }} | sed 's/off-\([0-9]*\).*/\1/')
-
-
+        id: jira-number
+        run: echo "jira_ticket_number=$(echo ${{ github.head_ref }} | sed 's/off-\([0-9]*\).*/\1/')" >> $GITHUB_OUTPUT
+        
       - name: Comment PR
         uses: thollander/actions-comment-pull-request@v2
         with:
           message: |
-            Current branch is $jira_ticket_number.
+            Current branch is ${{ steps.jira-number.outputs.jira_ticket_number }}.
