@@ -1,7 +1,7 @@
 name: Comment with Jira Ticket Number Once Approved
 on:
   pull_request_review:
-    types: [submitted]
+    types: [submitted, edited, dismissed]
 
 jobs:
   comment:
@@ -10,9 +10,13 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
+      - name: Get jira_ticket_number
+        run: |
+          echo ::set-env name=jira_ticket_number::$(echo ${{ github.head_ref }} | sed 's/off-\([0-9]*\).*/\1/')
+
 
       - name: Comment PR
         uses: thollander/actions-comment-pull-request@v2
         with:
           message: |
-            Current branch is `$(echo ${{ github.head_ref }} | sed 's/off-\([0-9]*\).*/\1/')`.
+            Current branch is ${{jira_ticket_number}}.
