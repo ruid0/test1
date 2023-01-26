@@ -12,10 +12,10 @@ jobs:
         uses: actions/checkout@v3
       - name: Get jira_ticket_number
         id: jira-number
-        run: echo "jira_ticket_number=$(echo ${{ github.head_ref }} | sed -E 's/off-([0-9]*).*/off-\1/'" >> $GITHUB_OUTPUT
+        run: echo "jira_ticket_number=$(echo ${{ github.head_ref }} | sed -E 's/off-([0-9]*).*/off-\1/')" >> $GITHUB_OUTPUT
         
       - name: Comment PR
         uses: thollander/actions-comment-pull-request@v2
         with:
           message: |
-            Current branch is ${{ steps.jira-number.outputs.jira_ticket_number }}.
+            Current branch is off-${{ steps.jira-number.outputs.jira_ticket_number }}.
