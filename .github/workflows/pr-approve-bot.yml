@@ -1,26 +1,22 @@
 name: Comment with Jira Ticket Number Once Approved
 on:
-  pull_request_review:
-    types: [submitted]
+  pull_request
+
 
 jobs:
   comment:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Check if review is approved
-      run: |
-        if [[ "$GITHUB_EVENT_NAME" == "pull_request_review" ]]; then
-          review_state=$(jq -r .review.state "$GITHUB_EVENT_PATH")
-          if [[ "$review_state" == "approved" ]]; then
-            echo "PR review is approved, proceeding with commenting Jira ticket number."
-            pr_number=$(jq -r .pull_request.number "$GITHUB_EVENT_PATH")
-            repo_name=$(jq -r .repository.name "$GITHUB_EVENT_PATH")
-            repo_owner=$(jq -r .repository.owner.login "$GITHUB_EVENT_PATH")
-            jira_ticket_number='JIRA-123'  # replace this with your actual Jira ticket number
-            echo "Posting comment with Jira ticket number $jira_ticket_number on PR #$pr_number in $repo_owner/$repo_name."
-            curl -s -X POST -H "Authorization: Bearer $TOKEN" https://api.github.com/repos/$repo_owner/$repo_name/issues/$pr_number/comments -d "{\"body\":\"This PR is related to Jira ticket $jira_ticket_number\"}"
-          else
-            echo "PR review is not approved, no action taken."
-          fi
-        fi
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Get jira_ticket_number
+        run: |
+          echo ::set-env name=jira_ticket_number::$(echo ${{ github.head_ref }} | sed 's/off-\([0-9]*\).*/\1/')
+
+
+      - name: Comment PR
+        uses: thollander/actions-comment-pull-request@v2
+        with:
+          message: |
+            Current branch is ${{jira_ticket_number}}.
