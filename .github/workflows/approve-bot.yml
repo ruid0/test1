@@ -8,9 +8,18 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Get current branch name
-        run: |
-          pr_number=$(jq -r .issue.number "$GITHUB_EVENT_PATH")
-          pull_request=$(curl -s -H "Authorization: Bearer $GITHUB_TOKEN" https://api.github.com/repos/$GITHUB_REPOSITORY/pulls/$pr_number)
-          current_branch=$(echo $pull_request | jq -r '.head.ref')
-          echo "Current branch: $current_branch"
+    - name: Check if comment contains keyword
+      run: |
+        if [[ "$GITHUB_EVENT_NAME" == "issue_comment" ]]; then
+          comment_body=$(jq -r .comment.body "$GITHUB_EVENT_PATH")
+          if [[ "$comment_body" == "approve" ]]; then
+            echo "Comment contains keyword 'approve', proceeding with PR approval."
+            pr_number=$(jq -r .issue.number "$GITHUB_EVENT_PATH")
+            repo_name=$(jq -r .repository.name "$GITHUB_EVENT_PATH")
+            repo_owner=$(jq -r .repository.owner.login "$GITHUB_EVENT_PATH")
+            echo "Approving PR #$pr_number in $repo_owner/$repo_name."
+            curl -s -X PUT -H "Authorization: Bearer $TOKEN" https://api.github.com/repos/$repo_owner/$repo_name/pulls/$pr_number/reviews -d "{\"event\":\"APPROVE\"}"
+          else
+            echo "Comment does not contain keyword 'approve', no action taken."
+          fi
+        fi
