@@ -8,6 +8,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+    - name: "Check branch"
+      run: | 
+        echo "Current branch: $GITHUB_HEAD_REF"
     - name: Check if review is approved
       run: |
         if [[ "$GITHUB_EVENT_NAME" == "pull_request_review" ]]; then
