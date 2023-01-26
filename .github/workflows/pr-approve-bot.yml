@@ -19,4 +19,4 @@ jobs:
         uses: thollander/actions-comment-pull-request@v2
         with:
           message: |
-            Current branch is ${{jira_ticket_number}}.
+            Current branch is $jira_ticket_number.
