@@ -1,13 +1,21 @@
-name: Automatic pull request review
-on: [pull_request]
+name: Dependabot auto-approve
+on: pull_request
+
+permissions:
+  pull-requests: write
+
 jobs:
-  automate-pullrequest-review:
+  dependabot:
     runs-on: ubuntu-latest
+    if: ${{ github.actor == 'dependabot[bot]' }}
     steps:
-      - name: Approve pull request
-        if: github.actor == 'dependabot[bot]'
-        uses: andrewmusgrave/automatic-pull-request-review@0.0.5
+      - name: Dependabot metadata
+        id: metadata
+        uses: dependabot/fetch-metadata@v1.1.1
         with:
-          repo-token: ${{ secrets.GITHUB_TOKEN }}
-          event: APPROVE
-          body: 'Thank you dependabot 🎊'
+          github-token: "${{ secrets.GITHUB_TOKEN }}"
+      - name: Approve a PR
+        run: gh pr review --approve "$PR_URL"
+        env:
+          PR_URL: ${{github.event.pull_request.html_url}}
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
