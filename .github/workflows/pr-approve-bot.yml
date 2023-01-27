@@ -13,15 +13,40 @@ jobs:
 
       - name: Review State
         id: review-state
-        run: echo "state=$(jq -r .review.state "$GITHUB_EVENT_PATH") >> $GITHUB_OUTPUT
+        run: echo "state=$(jq -r .review.state "$GITHUB_EVENT_PATH")" >> $GITHUB_OUTPUT
+
+      - name: Get branch name
+        id: branch-name
+        run: |
+          pr_number=$(jq -r .issue.number "$GITHUB_EVENT_PATH")
+
+          # Get the repository name and owner from the event payload
+          repo_name=$(jq -r .repository.name "$GITHUB_EVENT_PATH")
+          repo_owner=$(jq -r .repository.owner.login "$GITHUB_EVENT_PATH")
+
+          # Get the branch name using the GitHub API
+          branch_name=$(
+          curl \
+              -X POST \
+              -H "Accept: application/vnd.github+json" \
+              -H "Authorization: Bearer $GITHUB_TOKEN"\
+              -H "X-GitHub-Api-Version: 2022-11-28" \
+              https://api.github.com/repos/$repo_owner/$repo_name/pulls/$pr_number | jq -r .head.ref
+          )
+          echo $branch_name
+          echo "branch=$branch_name" >> $GITHUB_OUTPUT
+
 
       - name: Get jira_ticket_number
+        if: steps.branch-name.outputs.is_default == 'false'
         id: jira-number
-        run: echo "jira_ticket_number=$(echo ${{ github.head_ref }} | sed -E 's/off-([0-9]*).*/off-\1/')" >> $GITHUB_OUTPUT
+        run: |
+          echo ${{ steps.branch-name.outputs.branch }}
+          echo "jira_ticket_number=$(echo ${{ steps.branch-name.outputs.branch }} | sed -E 's/off-([0-9]*).*/off-\1/')" >> $GITHUB_OUTPUT
         
       - name: Comment PR
         if: ${{ steps.review-state.outputs.state == 'approved' }}
         uses: thollander/actions-comment-pull-request@v2
         with:
           message: |
-            ${{ steps.jira-number.outputs.jira_ticket_number }}
+            jira ticket ${{ steps.jira-number.outputs.jira_ticket_number }}
