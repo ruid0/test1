@@ -34,7 +34,7 @@ jobs:
               https://api.github.com/repos/$repo_owner/$repo_name/pulls/$pr_number | jq -r .head.ref
           )
           echo $branch_name
-          echo "branch=$branch_name >> $GITHUB_OUTPUT
+          echo "branch=$branch_name" >> $GITHUB_OUTPUT
 
 
       - name: Get jira_ticket_number
