@@ -15,12 +15,14 @@ jobs:
         id: review-state
         run: echo "state=$(jq -r .review.state "$GITHUB_EVENT_PATH")" >> $GITHUB_OUTPUT
 
-      - name: Current branch
-        run: echo ${GITHUB_REF##*/}
+      - name: Get branch name
+        id: branch-name
+        uses: tj-actions/branch-names@v6
 
       - name: Get jira_ticket_number
+        if: steps.branch-name.outputs.is_default == 'false'
         id: jira-number
-        run: echo "jira_ticket_number=$(echo ${GITHUB_REF##*/} | sed -E 's/off-([0-9]*).*/off-\1/')" >> $GITHUB_OUTPUT
+        run: echo "jira_ticket_number=$(echo ${{ steps.branch-name.outputs.current_branch }} | sed -E 's/off-([0-9]*).*/off-\1/')" >> $GITHUB_OUTPUT
         
       - name: Comment PR
         if: ${{ steps.review-state.outputs.state == 'approved' }}
