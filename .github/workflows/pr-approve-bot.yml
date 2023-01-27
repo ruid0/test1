@@ -6,7 +6,6 @@ on:
 jobs:
   extract-off-number:
     runs-on: ubuntu-latest
-
     steps:
     - name: Check if review is approved
       if: ${{ github.event.review.state == 'approved' }}
