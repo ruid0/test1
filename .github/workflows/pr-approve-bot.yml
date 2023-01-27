@@ -1,6 +1,12 @@
 name: Comment with Jira Ticket Number Once Approved
-on: pull_request_review
+on: 
+  pull_request_review:
+    types: [submitted]
 
+permissions:
+  contents: write
+  pull-requests: write
+  
 jobs:
   comment:
     runs-on: ubuntu-latest
