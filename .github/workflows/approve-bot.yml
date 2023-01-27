@@ -18,7 +18,13 @@ jobs:
             repo_name=$(jq -r .repository.name "$GITHUB_EVENT_PATH")
             repo_owner=$(jq -r .repository.owner.login "$GITHUB_EVENT_PATH")
             echo "Getting reviews for PR #$pr_number in $repo_owner/$repo_name."
-            reviews=$(curl -s -X GET -H "Authorization: Bearer $GITHUB_TOKEN" https://api.github.com/repos/$repo_owner/$repo_name/pulls/$pr_number/reviews)
+            reviews=$(
+              curl \
+                -H "Accept: application/vnd.github+json" \
+                -H "Authorization: Bearer $GITHUB_TOKEN"\
+                -H "X-GitHub-Api-Version: 2022-11-28" \
+                https://api.github.com/repos/$repo_owner/$repo_name/pulls/$pr_number/reviews
+            )
             echo $reviews
             review_id=$(echo $reviews | jq -r '.[].id')
             echo "Approving review #$review_id for PR #$pr_number in $repo_owner/$repo_name."
