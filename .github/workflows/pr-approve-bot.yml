@@ -17,14 +17,14 @@ jobs:
 
       - name: Get branch name
         id: branch-name
-        uses: tj-actions/branch-names@v6
+        run: echo "branch=$(jq -r .pull_request.head.ref "$GITHUB_EVENT_PATH")" >> $GITHUB_OUTPUT
 
       - name: Get jira_ticket_number
         if: steps.branch-name.outputs.is_default == 'false'
         id: jira-number
         run: |
-          echo ${GITHUB_REF}
-          echo "jira_ticket_number=$(echo ${{ steps.branch-name.outputs.current_branch }} | sed -E 's/off-([0-9]*).*/off-\1/')" >> $GITHUB_OUTPUT
+          echo ${{ steps.branch-name.outputs.branch }}
+          echo "jira_ticket_number=$(echo ${{ steps.branch-name.outputs.branch }} | sed -E 's/off-([0-9]*).*/off-\1/')" >> $GITHUB_OUTPUT
         
       - name: Comment PR
         if: ${{ steps.review-state.outputs.state == 'approved' }}
