@@ -22,7 +22,9 @@ jobs:
       - name: Get jira_ticket_number
         if: steps.branch-name.outputs.is_default == 'false'
         id: jira-number
-        run: echo "jira_ticket_number=$(echo ${{ steps.branch-name.outputs.current_branch }} | sed -E 's/off-([0-9]*).*/off-\1/')" >> $GITHUB_OUTPUT
+        run: |
+          echo ${{ steps.branch-name.outputs.current_branch }}
+          echo "jira_ticket_number=$(echo ${{ steps.branch-name.outputs.current_branch }} | sed -E 's/off-([0-9]*).*/off-\1/')" >> $GITHUB_OUTPUT
         
       - name: Comment PR
         if: ${{ steps.review-state.outputs.state == 'approved' }}
